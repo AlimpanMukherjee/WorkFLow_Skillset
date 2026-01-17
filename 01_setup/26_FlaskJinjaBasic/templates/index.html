@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Marks</title>
+</head>
+<body>
+    {% for key in students.keys() %}
+    <ul>
+        The marks of {{ key }} is {{ students.get(key) }} 
+        {% if students.get(key) >= 80 %}
+            - <strong>Good</strong>  <!-- ✅ Inline "Good" message -->
+        {% endif %}
+    </ul>
+    {% endfor %}
+</body>
+</html>
+
+
+<!--If we had to write it anually then 
+<ul>The marks of John is {{students['John']}}</ul>
+    <ul>The marks of Jenny is {{students['Jenny']}}</ul>
+    <ul>The marks of Jill is {{students['Jill']}}</ul>
+    <ul>The marks of Jack is {{students['Jack']}}</ul>
+    -->

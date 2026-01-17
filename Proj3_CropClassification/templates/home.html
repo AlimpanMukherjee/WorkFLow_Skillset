@@ -1,0 +1,331 @@
+<!-- <html>
+<h1>Crop Prediction</h1>
+
+<form action="{{url_for('predict_datapoint')}}" method="POST" >
+    <input type="text" name="Nitrogen" placeholder="Nitrogen" required="required" />
+    <input type="text" name="phosphorus" placeholder="phosphorus" required="required" />
+    <input type="text" name="potassium" placeholder="potassium" required="required" />
+    <input type="text" name="temperature" placeholder="temperature" required="required" />
+    <input type="text" name="humidity" placeholder="humidity" required="required" />
+    <input type="text" name="ph" placeholder="ph" required="required" />
+    <input type="text" name="rainfall" placeholder="rainfall" required="required" />
+    <button type="submit" class="btn btn-primary btn-block btn-large">Predict</button>
+</form>
+<h2>{{crop}}</h2>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Prediction System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 1.1em;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        form {
+            display: grid;
+            gap: 20px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e1e8ed;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #ffffff;
+            color: #2c3e50;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        }
+
+        input[type="text"]::placeholder {
+            color: #a0a0a0;
+            font-weight: 300;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-radius: 15px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+            border-left: 5px solid #667eea;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .result h2 {
+            color: #2c3e50;
+            font-size: 1.8em;
+            font-weight: 600;
+            text-transform: capitalize;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .icon {
+            font-size: 1.2em;
+            margin-right: 8px;
+        }
+
+        .farming-icons {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 2em;
+            opacity: 0.1;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+
+            .input-row {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+        }
+
+        /* Loading animation for button */
+        .btn.loading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .btn.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌱 Crop Prediction</h1>
+        <p class="subtitle">Smart Agriculture Technology</p>
+        
+        <div class="farming-icons">
+            🌾 🚜 🌽 🍅 🥕
+        </div>
+
+        <form action="{{url_for('predict_datapoint')}}" method="POST" id="cropForm">
+            <div class="input-row">
+                <div class="input-group">
+                    <input type="text" name="Nitrogen" placeholder="🌿 Nitrogen" required="required" />
+                </div>
+                <div class="input-group">
+                    <input type="text" name="phosphorus" placeholder="⚡ Phosphorus" required="required" />
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <input type="text" name="potassium" placeholder="🔋 Potassium" required="required" />
+                </div>
+                <div class="input-group">
+                    <input type="text" name="temperature" placeholder="🌡️ Temperature" required="required" />
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <input type="text" name="humidity" placeholder="💧 Humidity" required="required" />
+                </div>
+                <div class="input-group">
+                    <input type="text" name="ph" placeholder="⚖️ pH Level" required="required" />
+                </div>
+            </div>
+
+            <div class="input-group">
+                <input type="text" name="rainfall" placeholder="🌧️ Rainfall" required="required" />
+            </div>
+
+            <button type="submit" class="btn" id="predictBtn">
+                <span class="icon">🔍</span> Predict Best Crop
+            </button>
+        </form>
+
+        {% if crop %}
+        <div class="result">
+            <h2>🎯 Recommended Crop: {{ crop }}</h2>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        document.getElementById('cropForm').addEventListener('submit', function() {
+            const btn = document.getElementById('predictBtn');
+            btn.classList.add('loading');
+            btn.innerHTML = 'Analyzing...';
+            
+            // Remove loading state after form submission
+            setTimeout(() => {
+                btn.classList.remove('loading');
+                btn.innerHTML = '<span class="icon">🔍</span> Predict Best Crop';
+            }, 3000);
+        });
+
+        // Add floating animation to inputs on focus
+        document.querySelectorAll('input[type="text"]').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>

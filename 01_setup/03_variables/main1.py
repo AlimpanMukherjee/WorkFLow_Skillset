@@ -1,0 +1,10 @@
+age=5
+name="alimpan"
+cgpa=8.9
+is_completed=True
+print(age)
+print(name)
+print(cgpa)
+print(is_completed)
+print(type(age))
+print(type(is_completed))

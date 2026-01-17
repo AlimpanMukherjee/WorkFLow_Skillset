@@ -1,0 +1,8 @@
+def sum(a,b): #a and b are the local variabes
+    c=a+b
+    z=1 #this is local variable that is destroyed after the completion of the method sum
+    return c
+
+z=8 # here z is a gloabal variable
+print(sum(7,9))
+print(z)
