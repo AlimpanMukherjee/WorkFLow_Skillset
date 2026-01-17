@@ -1,0 +1,40 @@
+# Virtual environments
+venv/
+env/
+.venv/
+.conda/
+ENV/
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# VS Code settings
+.vscode/
+
+# PyCharm settings
+.idea/
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Large data files (optional - uncomment if you have these)
+# *.csv
+# *.xlsx
+# *.mp4
+# *.avi
+
+# Model files (optional - uncomment if you have large ML models)
+# *.h5
+# *.pkl
+# *.joblib
+# *.bin
+# *.safetensors
